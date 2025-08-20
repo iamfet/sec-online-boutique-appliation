@@ -62,6 +62,25 @@ jobs:
           working-directory: ${{ env.SERVICE_PATH }}
           args: --timeout=5m --output.text.path=stdout --output.sarif.path=golangci-lint.sarif
 
+      - name: Upload golangci-lint SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: ${{ env.SERVICE_PATH }}/golangci-lint.sarif
+      
+      - name: Upload golangci-lint results to DefectDojo
+        if: always()
+        run: |
+          curl -X POST "${{ secrets.DEFECTDOJO_URL }}/api/v2/import-scan/" \
+            -H "Authorization: Token ${{ secrets.DEFECTDOJO_TOKEN }}" \
+            -F "scan_type=SARIF" \
+            -F "file=@${{ env.SERVICE_PATH }}/golangci-lint.sarif" \
+            -F "engagement=${{ secrets.DEFECTDOJO_ENGAGEMENT_ID }}" \
+            -F "verified=true" \
+            -F "active=true" \
+            -F "scan_date=$(date +%Y-%m-%d)" \
+            -F "minimum_severity=Info"
+
   gitleaks-scan:
     name: Gitleaks Secret Scan
     runs-on: ubuntu-latest
@@ -86,6 +105,25 @@ jobs:
             --report-format=sarif \
             --exit-code=0
 
+      - name: Upload Gitleaks SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: gitleaks.sarif
+      
+      - name: Upload Gitleaks results to DefectDojo
+        if: always()
+        run: |
+          curl -X POST "${{ secrets.DEFECTDOJO_URL }}/api/v2/import-scan/" \
+            -H "Authorization: Token ${{ secrets.DEFECTDOJO_TOKEN }}" \
+            -F "scan_type=SARIF" \
+            -F "file=@gitleaks.sarif" \
+            -F "engagement=${{ secrets.DEFECTDOJO_ENGAGEMENT_ID }}" \
+            -F "verified=true" \
+            -F "active=true" \
+            -F "scan_date=$(date +%Y-%m-%d)" \
+            -F "minimum_severity=Info"
+
   snyk-security-scan:
     name: Snyk Security Scan
     runs-on: ubuntu-latest
@@ -106,6 +144,25 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --sarif-file-output=snyk.sarif ./src/productcatalogservice
+
+      - name: Upload Snyk SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: snyk.sarif
+      
+      - name: Upload Snyk results to DefectDojo
+        if: always()
+        run: |
+          curl -X POST "${{ secrets.DEFECTDOJO_URL }}/api/v2/import-scan/" \
+            -H "Authorization: Token ${{ secrets.DEFECTDOJO_TOKEN }}" \
+            -F "scan_type=Snyk Scan" \
+            -F "file=@snyk.sarif" \
+            -F "engagement=${{ secrets.DEFECTDOJO_ENGAGEMENT_ID }}" \
+            -F "verified=true" \
+            -F "active=true" \
+            -F "scan_date=$(date +%Y-%m-%d)" \
+            -F "minimum_severity=Info"
 
   sonarqube-security-scan:
     name: Sonarqube Security Analysis
@@ -136,6 +193,19 @@ jobs:
           curl -u "${{ secrets.SONAR_TOKEN }}:" \
             "${{ secrets.SONAR_URL }}/api/issues/search?componentKeys=${PROJECT_KEY}&resolved=false" \
             -o sonarqube-issues.json
+
+      - name: Upload SonarQube results to DefectDojo
+        if: always()
+        run: |
+          curl -X POST "${{ secrets.DEFECTDOJO_URL }}/api/v2/import-scan/" \
+            -H "Authorization: Token ${{ secrets.DEFECTDOJO_TOKEN }}" \
+            -F "scan_type=SonarQube Scan" \
+            -F "file=@sonarqube-issues.json" \
+            -F "engagement=${{ secrets.DEFECTDOJO_ENGAGEMENT_ID }}" \
+            -F "verified=true" \
+            -F "active=true" \
+            -F "scan_date=$(date +%Y-%m-%d)" \
+            -F "minimum_severity=Info"
 
   build-and-scan-image:
     name: Build & Scan Docker Image
@@ -181,6 +251,19 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to DefectDojo
+        if: always()
+        run: |
+          curl -X POST "${{ secrets.DEFECTDOJO_URL }}/api/v2/import-scan/" \
+            -H "Authorization: Token ${{ secrets.DEFECTDOJO_TOKEN }}" \
+            -F "scan_type=Trivy Scan" \
+            -F "file=@trivy-results.sarif" \
+            -F "engagement=${{ secrets.DEFECTDOJO_ENGAGEMENT_ID }}" \
+            -F "verified=true" \
+            -F "active=true" \
+            -F "scan_date=$(date +%Y-%m-%d)" \
+            -F "minimum_severity=Info"
 
   update-manifest:
     name: Update K8s Manifest
