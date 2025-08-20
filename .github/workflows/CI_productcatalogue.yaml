@@ -38,3 +38,26 @@ jobs:
         working-directory: ${{ env.SERVICE_PATH }}
         run: |
           go test -v -coverprofile=coverage.out ./...
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    continue-on-error: true
+    permissions:
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+          working-directory: ${{ env.SERVICE_PATH }}
+          args: --timeout=5m --output.text.path=stdout --output.sarif.path=golangci-lint.sarif
