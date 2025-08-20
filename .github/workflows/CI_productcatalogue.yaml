@@ -106,3 +106,35 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --sarif-file-output=snyk.sarif ./src/productcatalogservice
+
+  sonarqube-security-scan:
+    name: Sonarqube Security Analysis
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    continue-on-error: true
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run SonarCloud scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      
+      - name: Export SonarQube results
+        if: always()
+        run: |
+          # Wait for SonarQube analysis to complete
+          sleep 30
+          
+          # Get project key from sonar-project.properties
+          PROJECT_KEY="iamfet_sec-online-boutique-appliation"
+          
+          # Export issues as JSON
+          curl -u "${{ secrets.SONAR_TOKEN }}:" \
+            "${{ secrets.SONAR_URL }}/api/issues/search?componentKeys=${PROJECT_KEY}&resolved=false" \
+            -o sonarqube-issues.json
