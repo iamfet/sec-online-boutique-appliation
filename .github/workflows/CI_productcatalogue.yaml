@@ -181,3 +181,31 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+  update-manifest:
+    name: Update K8s Manifest
+    runs-on: ubuntu-latest
+    needs: build-and-scan-image
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACTIONS_PA_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "${{ secrets.USER_EMAIL }}"
+          git config --global user.name "${{ secrets.USER_NAME }}"
+
+      - name: Update deployment manifest
+        run: |
+          IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/productcatalogservice:v${{ github.run_id }}"
+          sed -i "s|image: .*|image: ${IMAGE_TAG}|" kubernetes/productcatalogservice/deploy.yaml
+          
+
+      - name: Commit and push changes
+        run: |
+          git add kubernetes/productcatalogservice/deploy.yaml
+          git commit -m "ci: update ${{ env.IMAGE_NAME }} image to v${{ github.run_id }}"
+          git push origin HEAD:main -f
