@@ -128,8 +128,6 @@ jobs:
       - name: Export SonarQube results
         if: always()
         run: |
-          # Wait for SonarQube analysis to complete
-          sleep 30
           
           # Get project key from sonar-project.properties
           PROJECT_KEY="iamfet_sec-online-boutique-appliation"
@@ -168,3 +166,18 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/productcatalogservice:v${{ github.run_id }}
           outputs: type=docker,dest=/tmp/productcatalogservice.tar
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          input: /tmp/productcatalogservice.tar
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          ignore-unfixed: true
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
