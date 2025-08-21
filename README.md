@@ -39,6 +39,21 @@ A comprehensive DevSecOps demonstration project showcasing security-first develo
 - **gRPC** - Inter-service communication
 - **Redis** - Session storage for cart service
 
+## 📁 Repository Structure
+
+```
+├── src/                    # Microservice source code
+│   ├── adservice/         # Java-based ad service
+│   ├── cartservice/       # C# shopping cart
+│   ├── frontend/          # Go web frontend
+│   └── ...
+├── kubernetes/            # Kubernetes manifests
+│   ├── [service]/deploy.yaml
+│   └── k8s-config.yaml   # Complete deployment
+├── docker/               # Docker build configurations
+└── .github/workflows/    # CI/CD pipelines
+```
+
 ## 🏗️ Architecture
 
 This application consists of 11 microservices built with different technologies:
@@ -98,17 +113,14 @@ This project implements a comprehensive security strategy that integrates securi
 - **Compliance**: Security findings mapped to compliance frameworks
 
 ### Security Pipeline Integration
-```mermaid
-graph LR
-    A[Code Commit] --> B[Build & Test]
-    B --> C[Security Scans]
-    C --> D[Container Build]
-    D --> E[Image Scan]
-    E --> F[Deploy]
-    C --> G[DefectDojo]
-    E --> G
-    G --> H[Risk Assessment]
-    H --> I[Compliance Reporting]
+```
+Code Commit → Build & Test → Security Scans → Container Build → Image Scan → Deploy
+                                    ↓              ↓
+                              DefectDojo ← ← ← ← ← ←
+                                    ↓
+                            Risk Assessment
+                                    ↓
+                          Compliance Reporting
 ```
 
 ### Security Best Practices
@@ -264,21 +276,6 @@ chmod +x .git/hooks/pre-commit
 - **DefectDojo**: Centralized vulnerability management and reporting
 - **Automated Uploads**: Security scan results automatically sent to DefectDojo
 - **SARIF Reports**: Standardized security findings format for GitHub Security tab
-
-## 📁 Repository Structure
-
-```
-├── src/                    # Microservice source code
-│   ├── adservice/         # Java-based ad service
-│   ├── cartservice/       # C# shopping cart
-│   ├── frontend/          # Go web frontend
-│   └── ...
-├── kubernetes/            # Kubernetes manifests
-│   ├── [service]/deploy.yaml
-│   └── k8s-config.yaml   # Complete deployment
-├── docker/               # Docker build configurations
-└── .github/workflows/    # CI/CD pipelines
-```
 
 ## 🤝 Contributing
 
