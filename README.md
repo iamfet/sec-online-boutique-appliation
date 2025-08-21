@@ -16,28 +16,25 @@ A comprehensive DevSecOps demonstration project showcasing security-first develo
 
 ## 🛠️ Tools and Technologies
 
-### Programming Languages
-- **Go** - Frontend, product catalog, checkout, and shipping services
-- **C#** - Cart service with .NET Core
-- **Node.js** - Payment and currency services
-- **Python** - Email, recommendation, load generator, and shopping assistant services
-- **Java** - Advertisement service
-
-### Security Tools
-- **SonarQube** - Code quality and security analysis
-- **golangci-lint** - Go static analysis
-- **Gitleaks** - Secrets detection
-- **Snyk** - Dependency vulnerability scanning
-- **Trivy** - Container image security scanning
-- **DefectDojo** - Vulnerability management platform
-
-### DevOps & Infrastructure
-- **Kubernetes** - Container orchestration
-- **Docker** - Containerization
-- **GitHub Actions** - CI/CD pipelines
-- **GitOps** - Automated deployment workflows
-- **gRPC** - Inter-service communication
-- **Redis** - Session storage for cart service
+| Category | Tool/Language | Purpose |
+|----------|---------------|----------|
+| **Programming Languages** | Go | Frontend, product catalog, checkout, and shipping services |
+| | C# | Cart service with .NET Core |
+| | Node.js | Payment and currency services |
+| | Python | Email, recommendation, load generator, and shopping assistant services |
+| | Java | Advertisement service |
+| **Security Tools** | SonarQube | Code quality and security analysis |
+| | golangci-lint | Go static analysis |
+| | Gitleaks | Secrets detection |
+| | Snyk | Dependency vulnerability scanning |
+| | Trivy | Container image security scanning |
+| | DefectDojo | Vulnerability management platform |
+| **DevOps & Infrastructure** | Kubernetes | Container orchestration |
+| | Docker | Containerization |
+| | GitHub Actions | CI/CD pipelines |
+| | GitOps | Automated deployment workflows |
+| | gRPC | Inter-service communication |
+| | Redis | Session storage for cart service |
 
 ## 📁 Repository Structure
 
@@ -58,26 +55,19 @@ A comprehensive DevSecOps demonstration project showcasing security-first develo
 
 This application consists of 11 microservices built with different technologies:
 
-### Go Services
-- **frontend** - Web UI and API gateway
-- **productcatalogservice** - Product inventory management
-- **checkoutservice** - Order processing
-- **shippingservice** - Shipping quotes and tracking
-
-### C# Services
-- **cartservice** - Shopping cart functionality with .NET Core
-
-### Node.js Services
-- **paymentservice** - Payment processing
-- **currencyservice** - Currency conversion
-
-### Python Services
-- **emailservice** - Email notifications
-- **recommendationservice** - ML-based product recommendations
-- **loadgenerator** - Traffic simulation
-
-### Java Services
-- **adservice** - Advertisement serving
+| Language | Service | Purpose |
+|----------|---------|----------|
+| **Go** | frontend | Web UI and API gateway |
+| | productcatalogservice | Product inventory management |
+| | checkoutservice | Order processing |
+| | shippingservice | Shipping quotes and tracking |
+| **C#** | cartservice | Shopping cart functionality with .NET Core |
+| **Node.js** | paymentservice | Payment processing |
+| | currencyservice | Currency conversion |
+| **Python** | emailservice | Email notifications |
+| | recommendationservice | ML-based product recommendations |
+| | loadgenerator | Traffic simulation |
+| **Java** | adservice | Advertisement serving |
 
 ## 🔒 Security
 
@@ -134,11 +124,14 @@ Code Commit → Build & Test → Security Scans → Container Build → Image Sc
 ## 🚀 Deployment
 
 ### Prerequisites
-- **Kubernetes Cluster**: v1.20+ with RBAC enabled
-- **Docker Registry**: Access to Docker Hub or private registry
-- **Required Secrets**: All pipeline secrets configured in GitHub
-- **Resource Requirements**: Minimum 4 CPU cores and 8GB RAM
-- **Network**: LoadBalancer or Ingress controller for external access
+
+| Requirement | Specification |
+|-------------|---------------|
+| **Kubernetes Cluster** | v1.20+ with RBAC enabled |
+| **Docker Registry** | Access to Docker Hub or private registry |
+| **Required Secrets** | All pipeline secrets configured in GitHub |
+| **Resource Requirements** | Minimum 4 CPU cores and 8GB RAM |
+| **Network** | LoadBalancer or Ingress controller for external access |
 
 ### Quick Start
 ```bash
@@ -183,11 +176,14 @@ kubectl get pods -l version=canary
 ```
 
 ### Production Considerations
-- **Resource Limits**: Configure appropriate CPU/memory limits
-- **Health Checks**: Ensure liveness and readiness probes are configured
-- **Persistent Storage**: Configure volumes for stateful services
-- **Network Policies**: Implement pod-to-pod communication restrictions
-- **Monitoring**: Deploy observability stack via GitOps repository
+
+| Consideration | Implementation |
+|---------------|----------------|
+| **Resource Limits** | Configure appropriate CPU/memory limits |
+| **Health Checks** | Ensure liveness and readiness probes are configured |
+| **Persistent Storage** | Configure volumes for stateful services |
+| **Network Policies** | Implement pod-to-pod communication restrictions |
+| **Monitoring** | Deploy observability stack via GitOps repository |
 
 ## 🔄 CI/CD Pipeline
 
